@@ -1,10 +1,14 @@
 package model;
 
+import java.time.LocalDate;
+
 public class Book extends Publication {
     protected String genre;
     protected int edition;
     protected String isbn;
     protected String summary;
+    private LocalDate loanDate;
+    private LocalDate dueDate;
 
     //Exibir dados
     @Override
@@ -17,36 +21,65 @@ public class Book extends Publication {
         System.out.println("================================");
     }
     // Emprestar livro
-    public void emprestar() {
-        if (getIsAvaible()) {
+    public void borrowBook() {
+         if (getIsAvaible()) {
             setIsAvaible(false);
-            System.out.println("Livro emprestado com sucesso.");
+            loanDate = LocalDate.now();
+            dueDate = loanDate.plusDays(7); // ex: 7 dias
+            System.out.println("Livro emprestado até: " + dueDate);
         } else {
             System.out.println("Livro já está emprestado.");
         }
     }
 
     // Devolver livro
-    public void devolver() {
+    public void returnBook() {
         if (!getIsAvaible()) {
             setIsAvaible(true);
+            loanDate = null;
+            dueDate = null;
             System.out.println("Livro devolvido com sucesso.");
-        } else {
-            System.out.println("O livro já está disponível.");
         }
     }
 
     // Renovar empréstimo
-    public void renovarEmprestimo() {
-        if (!getIsAvaible()) {
-            System.out.println("Empréstimo renovado com sucesso.");
-        } else {
-            System.out.println("Não é possível renovar um livro disponível.");
+    public void renewLoan() {
+        if (!getIsAvaible() && dueDate != null) {
+            dueDate = dueDate.plusDays(7);
+            System.out.println("Novo prazo: " + dueDate);
         }
     }
 
     // Consultar resumo
-    public String consultarResumo() {
+    public String getSummary() {
         return summary;
+    }
+
+    //Verificar atraso
+    public boolean isOverdue() {
+        return dueDate != null && LocalDate.now().isAfter(dueDate);
+    }
+
+    //Calcular multa por atraso
+    public double calculateFine(double dailyRate) {
+        if (isOverdue()) {
+            long daysLate = LocalDate.now().toEpochDay() - dueDate.toEpochDay();
+            return daysLate * dailyRate;
+        }
+        return 0;
+    }
+
+    //VALIDAÇÕES
+    public void setIsbn(String isbn) {
+        if (isbn == null || !isbn.matches("\\d{13}")) {
+            throw new IllegalArgumentException("ISBN deve conter exatamente 13 dígitos.");
+        }
+        this.isbn = isbn;
+    }
+    public void setSummary(String summary) {
+        if (summary == null || summary.trim().isEmpty()) {
+            throw new IllegalArgumentException("Resumo não pode ser vazio.");
+        }
+        this.summary = summary;
     }
 }
