@@ -3,83 +3,109 @@ package model;
 import java.time.LocalDate;
 
 public class Book extends Publication {
-    protected String genre;
+    private String genre;
     protected int edition;
     protected String isbn;
     protected String summary;
     private LocalDate loanDate;
     private LocalDate dueDate;
 
-    //Exibir dados
+    public Book(int id, String title, String author,
+                LocalDate publicationDate, String publisher, int pageCount,
+                String genre, int edition, String isbn, String summary) {
+
+        super(id, title, author, publicationDate, publisher, pageCount);
+
+        this.genre = genre;
+        this.edition = edition;
+        setIsbn(isbn);
+        setSummary(summary);
+    }
+
+    //Display data
     @Override
     protected void displayInformation() {
-        super.displayInformation(); // reaproveita o que já existe
+        super.displayInformation(); // reuse parent data
 
-        System.out.println("Gênero: " + genre);
-        System.out.println("Edição: " + edition);
+        System.out.println("Genre: " + genre);
+        System.out.println("Edition: " + edition);
         System.out.println("ISBN: " + isbn);
         System.out.println("================================");
     }
-    // Emprestar livro
+
+    // Borrow book
     public void borrowBook() {
-         if (getIsAvaible()) {
-            setIsAvaible(false);
+         if (getIsAvailable()) {
+            setIsAvailable(false);
             loanDate = LocalDate.now();
-            dueDate = loanDate.plusDays(7); // ex: 7 dias
-            System.out.println("Livro emprestado até: " + dueDate);
+            dueDate = loanDate.plusDays(7); // example: 7 days
+            System.out.println("Book borrowed until: " + dueDate);
         } else {
-            System.out.println("Livro já está emprestado.");
+            System.out.println("Book is already borrowed.");
         }
     }
 
-    // Devolver livro
+    // Return book
     public void returnBook() {
-        if (!getIsAvaible()) {
-            setIsAvaible(true);
+        if (!getIsAvailable()) {
+            setIsAvailable(true);
             loanDate = null;
             dueDate = null;
-            System.out.println("Livro devolvido com sucesso.");
+            System.out.println("Book returned successfully.");
         }
     }
 
-    // Renovar empréstimo
+    // Renew loan
     public void renewLoan() {
-        if (!getIsAvaible() && dueDate != null) {
+        if (!getIsAvailable() && dueDate != null) {
             dueDate = dueDate.plusDays(7);
-            System.out.println("Novo prazo: " + dueDate);
+            System.out.println("New due date: " + dueDate);
         }
     }
 
-    // Consultar resumo
-    public String getSummary() {
-        return summary;
-    }
+    // Get summary
+    public String getSummary() {return summary;}
 
-    //Verificar atraso
+    // Check overdue
     public boolean isOverdue() {
         return dueDate != null && LocalDate.now().isAfter(dueDate);
     }
 
-    //Calcular multa por atraso
+    // Calculate fine
     public double calculateFine(double dailyRate) {
         if (isOverdue()) {
-            long daysLate = LocalDate.now().toEpochDay() - dueDate.toEpochDay();
+            long daysLate = java.time.temporal.ChronoUnit.DAYS.between(dueDate, LocalDate.now());
             return daysLate * dailyRate;
         }
         return 0;
-    }
+    }   
 
-    //VALIDAÇÕES
+    //VALIDATIONS
     public void setIsbn(String isbn) {
         if (isbn == null || !isbn.matches("\\d{13}")) {
-            throw new IllegalArgumentException("ISBN deve conter exatamente 13 dígitos.");
+            throw new IllegalArgumentException("ISBN must contain exactly 13 digits.");
         }
         this.isbn = isbn;
     }
+
     public void setSummary(String summary) {
         if (summary == null || summary.trim().isEmpty()) {
-            throw new IllegalArgumentException("Resumo não pode ser vazio.");
+            throw new IllegalArgumentException("Summary cannot be empty.");
         }
         this.summary = summary;
+    }
+
+    public void setGenre(String genre) {
+        if (genre == null || genre.trim().isEmpty()) {
+            throw new IllegalArgumentException("Genre cannot be empty.");
+        }
+        this.genre = genre;
+    }
+
+    public void setEdition(int edition) {
+        if (edition <= 0) {
+            throw new IllegalArgumentException("Edition must be greater than zero.");
+        }
+        this.edition = edition;
     }
 }
