@@ -1,15 +1,16 @@
 package model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public abstract class Publication {
     private int id;
     private String title;
     private String author;
-    private Date publicationDate;
+    private LocalDate publicationDate;
     private String publisher;
     private int pageCount;
     private boolean isAvailable = true;//livro por padrão estará disponível
+    
 
     //Getters - para leitura 
     public int getId(){
@@ -21,7 +22,7 @@ public abstract class Publication {
     public String getAuthor(){
         return this.author;
     }
-    public Date getPublicationDate(){
+    public LocalDate getPublicationDate(){
         return this.publicationDate;
     }
     public String getPublisher(){
@@ -50,6 +51,32 @@ public abstract class Publication {
         System.out.println("Páginas: " + pageCount);
         System.out.println("Disponibilidade: " + (isAvailable ? "Disponível" : "Indisponível"));
         System.out.println("================================");
-}
+    }
 
+    //VALIDAÇÕES
+    public void setTitle(String title) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("O título não pode ser vazio.");
+        }
+        this.title = title;
+    }
+    public void setAuthor(String author) {
+        if (author == null || author.trim().isEmpty()) {
+            throw new IllegalArgumentException("O autor não pode ser vazio.");
+        }
+        this.author = author;
+    }
+    
+    public void setPageCount(int pageCount) {
+        if (pageCount <= 0) {
+            throw new IllegalArgumentException("O número de páginas deve ser maior que zero.");
+        }
+        this.pageCount = pageCount;
+    }
+    public void setPublicationDate(LocalDate publicationDate) {
+        if (publicationDate == null) {
+            throw new IllegalArgumentException("A data de publicação não pode ser nula.");
+        }
+        this.publicationDate = publicationDate;
+    }
 }
