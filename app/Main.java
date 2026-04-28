@@ -78,7 +78,6 @@ public class Main {
         System.out.println("\n======= ALL PUBLICATIONS - AFTER RETURN =======");
         controller.listPublications();
 
-        // ─── DEMONSTRATING EXCEPTION HANDLING ────────────────────────────────
 
         System.out.println("\n======= TESTING EXCEPTION HANDLING =======");
         try {
