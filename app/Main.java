@@ -77,5 +77,18 @@ public class Main {
 
         System.out.println("\n======= ALL PUBLICATIONS - AFTER RETURN =======");
         controller.listPublications();
+
+        // ─── DEMONSTRATING EXCEPTION HANDLING ────────────────────────────────
+
+        System.out.println("\n======= TESTING EXCEPTION HANDLING =======");
+        try {
+            Book invalidBook = new Book(
+                99, "", "Some Author",
+                LocalDate.of(2024, 1, 1), "Some Publisher", 100,
+                "Genre", 1, "9780132350884", "Summary"
+            );
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error caught: " + e.getMessage());
+        }
     }
 }

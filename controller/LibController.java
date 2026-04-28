@@ -51,10 +51,10 @@ public class LibController {
 
         String currentQtd = reader.getBooksQtd();
         int newQtd;
-        if (currentQtd == null || currentQtd.isEmpty()) {
-            newQtd = 1;
-        } else {
+        try {
             newQtd = Integer.parseInt(currentQtd) + 1;
+        } catch (NumberFormatException e) {
+            newQtd = 1;
         }
         reader.setBooksQtd(String.valueOf(newQtd));
 
@@ -72,13 +72,13 @@ public class LibController {
 
         String currentQtd = reader.getBooksQtd();
         int newQtd;
-        if (currentQtd == null || currentQtd.isEmpty()) {
-            newQtd = 0;
-        } else {
+        try {
             newQtd = Integer.parseInt(currentQtd) - 1;
             if (newQtd < 0) {
                 newQtd = 0;
             }
+        } catch (NumberFormatException e) {
+            newQtd = 0;
         }
         reader.setBooksQtd(String.valueOf(newQtd));
 
