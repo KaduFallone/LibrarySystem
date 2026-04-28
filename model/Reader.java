@@ -1,6 +1,6 @@
 package model;
 
-public class Reader implements Validation {
+public class Reader implements Validations {
 
     private String name;
     private String email;
