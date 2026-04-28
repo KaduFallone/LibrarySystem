@@ -35,6 +35,23 @@ public abstract class Publication {
     //Setters - change values
     public void setIsAvailable(boolean newIsAvailable){this.isAvailable = newIsAvailable;}
 
+    // Borrow and return - Book overrides these with date tracking
+    public void borrowBook() {
+        if (getIsAvailable()) {
+            setIsAvailable(false);
+            System.out.println("\"" + getTitle() + "\" borrowed successfully.");
+        } else {
+            System.out.println("\"" + getTitle() + "\" is already borrowed.");
+        }
+    }
+
+    public void returnBook() {
+        if (!getIsAvailable()) {
+            setIsAvailable(true);
+            System.out.println("\"" + getTitle() + "\" returned successfully.");
+        }
+    }
+
      //Display data
     protected void displayInformation() {
         System.out.println("===== BOOK INFORMATION =====");
